@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> 3D UX - Full Feature Simulation</title>
+    <title>Logos 3D UX - Full Feature Simulation (Scroll Fix)</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@300;400&display=swap');
 
@@ -44,6 +44,13 @@
             color: var(--color-accent-gold);
             margin-bottom: 30px;
             text-align: center;
+            /* Added position sticky for Parallax effect */
+            position: sticky;
+            top: 90px; /* Below the search bar */
+            z-index: 5; 
+            transition: transform 0.3s ease-out;
+            transform: translateZ(0); /* Force hardware acceleration */
+            background-color: var(--color-bg-primary); /* Prevents text from being seen through */
         }
 
         .verse-text {
@@ -52,7 +59,7 @@
             line-height: 1.8;
             margin-bottom: 25px;
             position: relative;
-            cursor: pointer; /* Makes words clickable */
+            cursor: pointer;
         }
 
         .verse-num {
@@ -64,13 +71,15 @@
             display: inline-block;
         }
 
-        /* --- 3. Search Bar (Glassmorphism) --- */
+        /* --- 3. Search Bar (Glassmorphism & STICKY) --- */
         .search-container {
-            position: sticky;
+            position: sticky; /* Sticky element */
             top: 0;
             z-index: 100;
             padding: 20px 0;
             text-align: center;
+            background: var(--color-bg-primary); /* Ensures search bar floats over content */
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5); /* Shadow for depth/float effect */
         }
         
         #smartSearch {
@@ -90,12 +99,12 @@
 
         #smartSearch:focus {
             background: rgba(255, 255, 255, 0.15);
-            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5); /* Neumorphic inset feel */
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
         }
 
         /* --- 4. Smart Search Results Container (Layered 3D) --- */
         #searchResults {
-            position: absolute;
+            position: fixed; /* Changed to fixed so it always displays relative to viewport */
             top: 100px;
             left: 50%;
             transform: translateX(-50%);
@@ -103,7 +112,7 @@
             max-width: 800px;
             z-index: 90;
             padding: 20px;
-            background: rgba(18, 24, 34, 0.95); /* Semi-opaque background to anchor results */
+            background: rgba(18, 24, 34, 0.95);
             border-radius: 15px;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
             display: none;
@@ -134,13 +143,13 @@
         }
 
         .result-card.factbook {
-            background: rgba(255, 215, 0, 0.1); /* Slightly different material for Factbook */
+            background: rgba(255, 215, 0, 0.1);
         }
 
         /* --- 5. Original Word Pop-up (Haptic Simulation) --- */
         #wordPopup {
             position: fixed;
-            bottom: -150px; /* Hidden initially */
+            bottom: -150px; 
             left: 50%;
             transform: translateX(-50%);
             width: 350px;
@@ -149,7 +158,7 @@
             border: 2px solid var(--color-accent-gold);
             border-radius: 15px 15px 0 0;
             box-shadow: 0 -10px 30px rgba(255, 215, 0, 0.4);
-            transition: bottom 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* Springy animation */
+            transition: bottom 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
             z-index: 200;
         }
         
@@ -217,6 +226,27 @@
             font-size: 20px;
             cursor: pointer;
         }
+
+        /* --- 7. Placeholder for Scrolling --- */
+        .placeholder-content {
+            margin-top: 50px;
+            height: 1200px; /* Forces scroll bar */
+            background: repeating-linear-gradient(
+                45deg,
+                #121822,
+                #121822 50px,
+                #181f2b 50px,
+                #181f2b 51px /* Subtle repeating texture for depth */
+            );
+            padding: 40px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .placeholder-content p {
+            color: #9aa9bd;
+            line-height: 1.6;
+        }
+
     </style>
 </head>
 <body>
@@ -225,7 +255,7 @@
 
     <aside class="control-panel" id="controlPanel">
         <h2>Factbook & Tools</h2>
-        <p style="color: #9aa9bd; font-size: 0.9em; margin-bottom: 20px;">The power delivered with depth.</p>
+        <p style="color: #9aa9bd; font-size: 0.9em; margin-bottom: 20px;">The power of Logos, delivered with depth.</p>
         <button class="neumorphic-btn" onclick="loadPassageGuide()">Passage Guide</button>
         <button class="neumorphic-btn" onclick="loadLexicon()">Original Language Lexicon</button>
         <button class="neumorphic-btn">Sermon Builder</button>
@@ -240,7 +270,7 @@
     </aside>
 
     <div id="wordPopup">
-        <h3 id="popupWord">Word</h3>
+        <h3 id="popupWord">λόγος (Logos)</h3>
         <p><strong>Definition:</strong> Word, speech, reason, or divine expression.</p>
         <p><strong>Strong's:</strong> G3056</p>
         <button style="float: right; padding: 5px 10px; background: #FFD700; border: none; border-radius: 5px;" onclick="document.getElementById('wordPopup').classList.remove('active')">Close</button>
@@ -267,6 +297,15 @@
         <div class="verse-text" id="v3">
             <span class="verse-num">3</span> All things were made through him, and without him was not anything made that was made.
         </div>
+
+        <div class="placeholder-content">
+            <h2 style="color: var(--color-accent-gold); font-family: 'Roboto', sans-serif;">— Scroll Down to Test Sticky UI —</h2>
+            <p>This long section of text now forces the page to scroll, allowing you to observe the 'Smart Search' bar remaining sticky at the top, which is a key component of modern, immersive UI design.</p>
+            <p>This scrollable area also demonstrates the background texture and spacing that the main Bible text would interact with as you navigate a full chapter or book. Scroll up slowly to see the effect of the sticky H1 element.</p>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+            <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?</p>
+            <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat.</p>
+        </div>
     </main>
     
     <script>
@@ -279,8 +318,6 @@
         function showWordPopup(englishWord, greekWord) {
             const popup = document.getElementById('wordPopup');
             document.getElementById('popupWord').innerHTML = `${greekWord} (${englishWord})`;
-            
-            // Simulates a smooth, springy animated slide-up
             popup.classList.add('active');
         }
         
@@ -293,12 +330,10 @@
                 return;
             }
 
-            // Simulate the database/API query based on the text
             const lowerQuery = query.toLowerCase();
             let resultsHTML = '';
 
             if (lowerQuery.includes('john 1:1')) {
-                // Simulation for a specific verse lookup
                 resultsHTML = `
                     <div class="result-group">
                         <h3>Passage Lookup (Exact Match)</h3>
@@ -308,7 +343,6 @@
                     </div>
                 `;
             } else if (lowerQuery.includes('faith')) {
-                // Simulation for a complex theological concept search
                 resultsHTML = `
                     <div class="result-group">
                         <h3>Factbook: Concept Analysis</h3>
@@ -324,7 +358,6 @@
                     </div>
                 `;
             } else if (lowerQuery.includes('god')) {
-                // Simulation for a broad keyword search
                 resultsHTML = `
                     <div class="result-group">
                         <h3>Top Keyword Matches</h3>
@@ -333,7 +366,6 @@
                     </div>
                 `;
             } else {
-                // No match
                 resultsHTML = `<p style="text-align: center;">No Smart Search matches found for "${query}" in your library.</p>`;
             }
 
